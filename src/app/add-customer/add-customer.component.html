@@ -1,0 +1,144 @@
+<div class="card w-25">
+    <div class="card-body">
+        <h1 class="card-title">Edit Customer Record</h1>
+      <form [formGroup]="angForm" novalidate>
+        <div class="form-group">
+          <label class="col-md-4">Customer Number</label>
+          <input type="text" class="form-control" 
+          formControlName="CustomerNumber"
+            #CUSNUM
+            [(ngModel)] = "customer.CUSNUM"/>
+        </div>
+        <div *ngIf="angForm.controls['CustomerNumber'].invalid && (angForm.controls['CustomerNumber'].dirty || angForm.controls['CustomerNumber'].touched)" class="alert alert-danger">
+          <div *ngIf="angForm.controls['CustomerNumber'].errors?.['required']">
+            Customer Number is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-4">Customer Name </label>
+          <input type="text" class="form-control"
+          formControlName="CustomerName" 
+          #LSTNAM
+          [(ngModel)] = "customer.LSTNAM">
+        </div>
+        <div *ngIf="angForm.controls['CustomerName'].invalid && (angForm.controls['CustomerName'].dirty || angForm.controls['CustomerName'].touched)" class="alert alert-danger">
+          <div *ngIf="angForm.controls['CustomerName'].errors?.['required']">
+            Customer Name is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-4">Customer Initials</label>
+          <input type="text" class="form-control" 
+          formControlName="CustomerInitials" 
+          #INIT
+          [(ngModel)] = "customer.INIT"/>
+        </div>
+        <div *ngIf="angForm.controls['CustomerInitials'].invalid && (angForm.controls['CustomerInitials'].dirty || angForm.controls['CustomerInitials'].touched)" class="alert alert-danger">
+          <div *ngIf="angForm.controls['CustomerInitials'].errors?.['required']">
+            Customer Initials is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-4">Street</label>
+          <input type="text" class="form-control" 
+          formControlName="CustomerStreet" 
+          #STREET
+          [(ngModel)] = "customer.STREET"/>
+        </div>
+        <div *ngIf="angForm.controls['CustomerStreet'].invalid && (angForm.controls['CustomerStreet'].dirty || angForm.controls['CustomerStreet'].touched)" class="alert alert-danger">
+          <div *ngIf="angForm.controls['CustomerStreet'].errors?.['required']">
+            Customer Street is required.
+          </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4">City</label>
+            <input type="text" class="form-control" 
+            formControlName="CustomerCity" 
+            #CITY
+            [(ngModel)] = "customer.CITY"/>
+        </div>
+          <div *ngIf="angForm.controls['CustomerCity'].invalid && (angForm.controls['CustomerCity'].dirty || angForm.controls['CustomerCity'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['CustomerCity'].errors?.['required']">
+              Custimer City is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4">State</label>
+            <input type="text" class="form-control" 
+            formControlName="CustomerState" 
+            #STATE
+            [(ngModel)] = "customer.STATE"/>
+        </div>
+          <div *ngIf="angForm.controls['CustomerState'].invalid && (angForm.controls['CustomerState'].dirty || angForm.controls['CustomerState'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['CustomerState'].errors?.['required']">
+              State is required.
+            </div>
+          </div>
+        <div class="form-group">
+            <label class="col-md-4">Zip Code</label>
+            <input type="text" class="form-control" 
+            formControlName="CustomerZip" 
+            #ZIPCOD
+            [(ngModel)] = "customer.ZIPCOD"/>
+        </div>
+          <div *ngIf="angForm.controls['CustomerZip'].invalid && (angForm.controls['CustomerZip'].dirty || angForm.controls['CustomerZip'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['CustomerZip'].errors?.['required']">
+              Zip Code is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4">CrLimit</label>
+            <input type="text" class="form-control" 
+            formControlName="CustomerCredit" 
+            #CDTLMT
+            [(ngModel)] = "customer.CDTLMT"/>
+        </div>
+          <div *ngIf="angForm.controls['CustomerCredit'].invalid && (angForm.controls['CustomerCredit'].dirty || angForm.controls['CustomerCredit'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['CustomerCredit'].errors?.['required']">
+              Credit Limit is required.
+            </div>
+          </div>
+        <div class="form-group">
+            <label class="col-md-4">Charge Code</label>
+            <input type="text" class="form-control" 
+            formControlName="CustomerChargeCode" 
+            #CHGCOD
+            [(ngModel)] = "customer.CHGCOD"/>
+        </div>
+          <div *ngIf="angForm.controls['CustomerChargeCode'].invalid && (angForm.controls['CustomerChargeCode'].dirty || angForm.controls['CustomerChargeCode'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['CustomerChargeCode'].errors?.['required']">
+             Charge Code is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4">Balance Due</label>
+            <input type="text" class="form-control" 
+            formControlName="CustomerBalance" 
+            #BALDUE
+            [(ngModel)] = "customer.BALDUE"/>
+        </div>
+          <div *ngIf="angForm.controls['CustomerBalance'].invalid && (angForm.controls['CustomerBalance'].dirty || angForm.controls['CustomerBalance'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['CustomerBalance'].errors?.['required']">
+             Balance Due is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4">Credit Due</label>
+            <input type="text" class="form-control" 
+            formControlName="CustomerCreditDue" 
+            #CDTDUE
+            [(ngModel)] = "customer.CDTDUE"/>
+        </div>
+          <div *ngIf="angForm.controls['CustomerCreditDue'].invalid && (angForm.controls['CustomerCreditDue'].dirty || angForm.controls['CustomerCreditDue'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['CustomerCreditDue'].errors?.['required']">
+             Credit Due is required.
+            </div>
+          </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary"
+          [disabled]="angForm.pristine || angForm.invalid"
+          (click) = "addCustomer(CUSNUM.value, LSTNAM.value,INIT.value, STREET.value,CITY.value,STATE.value, ZIPCOD.value,CDTLMT.value, CHGCOD.value,BALDUE.value,CDTDUE.value)">Add Customer</button>
+        </div>
+      </form>
+    </div>
+  </div>

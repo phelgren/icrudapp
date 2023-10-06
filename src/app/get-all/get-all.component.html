@@ -1,0 +1,35 @@
+<table class="table table-hover">
+    <thead class="table-dark">
+    <tr>
+        <td>Customer ID</td>
+        <td>Last Name</td>
+        <td>Initials</td>
+        <td>Street</td>
+        <td>City </td>
+        <td>State</td>
+        <td>Zip Code</td>
+        <td>Credit limit </td>
+        <td>Charge Code</td>
+        <td>Balance </td>
+        <td>Credit </td>
+    </tr>
+    </thead>
+  
+    <tbody>
+        <tr *ngFor="let customer of customers; let i = index">
+            <td>{{ customer.CUSNUM }}</td>
+            <td>{{ customer.LSTNAM }}</td>
+            <td>{{ customer.INIT }}</td>
+            <td>{{ customer.STREET }}</td>
+            <td>{{ customer.CITY }}</td>
+            <td>{{ customer.STATE }}</td>
+            <td>{{ customer.ZIPCOD }}</td>
+            <td>{{ customer.CDTLMT }}</td>
+            <td>{{ customer.CHGCOD }}</td>
+            <td>{{ customer.BALDUE }}</td>
+            <td>{{ customer.CDTDUE}}</td>
+            <td><a [routerLink]="['/edit', customer.CUSNUM]" class="btn btn-primary">Edit</a></td>
+            <td><a (click) = "delete(customer.CUSNUM)" class="btn btn-danger">Delete</a></td>
+        </tr>
+    </tbody>
+  </table>
