@@ -20,7 +20,6 @@ export class AppComponent implements OnInit{
   title = 'icrudapp';
   
   ngOnInit(){
-    // for right now we won't load on init
     this.onGetRecords();
   };
   

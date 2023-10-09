@@ -1,0 +1,106 @@
+
+CSS Tweaks
+
+            "styles": [
+              "src/styles.css",
+              "./node_modules/bootstrap/dist/css/bootstrap-grid.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.css"
+            ],
+
+TypeScript Tweak
+    "strictPropertyInitialization":false,
+
+ANGULAR CHEATS
+
+app-routing.modules 
+
+const routes: Routes = [
+  {
+    path: 'getall',
+    component: GetAllComponent
+  },
+  {
+    path: 'edit/:cusnum',
+    component: EditCustomerComponent
+  },
+  {
+    path: 'new',
+    component: AddCustomerComponent
+  }
+];
+
+app.component.html
+
+<nav class="navbar navbar-expand-sm bg-light">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a routerLink="new" class="nav-link" routerLinkActive="active">
+            Create Customer Record
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="getall" class="nav-link" routerLinkActive="active">
+            List Customers
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+ 
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+
+  app.component.ts 
+
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {ApiService} from './services/api.service';   !! Don't forget to create the services
+
+import {
+  NavigationCancel,
+  Event,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router
+} from '@angular/router';
+
+ ngOnInit(){
+    this.onGetRecords();
+  };
+  
+  constructor(private http: HttpClient,private apiService:ApiService,private router : Router){
+
+  this.router.events.subscribe((event: Event) => {
+
+    this.navigationInterceptor(event);
+  });
+}
+private navigationInterceptor(event: Event): void {
+
+  if (event instanceof NavigationStart) {
+    //this.loadingBar.start();
+  }
+  if (event instanceof NavigationEnd) {
+    //this.loadingBar.complete();
+  }
+  if (event instanceof NavigationCancel) {
+    //this.loadingBar.stop();
+  }
+  if (event instanceof NavigationError) {
+    //this.loadingBar.stop();
+  }
+}
+
+onGetRecords(){
+  this.apiService.getRecords();
+}
+
+app.component.ts 
+import { HttpClientModule } from '@angular/common/http';
+
+COMPONENTS 
+
+Just copy the ts and html files from the repo 
