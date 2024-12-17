@@ -37,7 +37,7 @@ jobs:
       # Step 2: Update "Date Fixed" Field with Today's Date
       - name: Update "Date Fixed" Custom Field
         if: steps.check_status.outputs.status_ready_for_qa == 'true'
-        uses: octokit/graphql-action@v2
+        uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -53,9 +53,9 @@ jobs:
             }
           variables: |
             {
-              "projectId": "2",
+              "projectId": "PVT_kwHOAAFgjc4AuhQQ",
               "itemId": "${{ github.event.issue.node_id }}",
-              "fieldId": "YOUR_DATE_FIXED_FIELD_ID",
+              "fieldId": "PVTF_lAHOAAFgjc4AuhQQzglGg2Y",
               "value": "${{ steps.date.outputs.today_date }}"
             }
 
