@@ -1,0 +1,13 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:   
+  issues:
+    types:
+      - edited
+      - reopened
+      - opened
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: [self-hosted,windows,x64]
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
