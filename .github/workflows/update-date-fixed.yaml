@@ -9,7 +9,7 @@ on:
 
 jobs:
   update_date_fixed:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, windows, x64]
     permissions:
       issues: write
       contents: read
