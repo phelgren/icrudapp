@@ -6,8 +6,10 @@ on:
       - edited
       - reopened
       - opened
-jobs:
-  Explore-GitHub-Actions:
     runs-on: [self-hosted,windows,x64]
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      id: auth
+      env: 
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      echo "Issue number: ${{ github.event.issue.number }}"
+      echo "Action: ${{ github.event.action }}"
