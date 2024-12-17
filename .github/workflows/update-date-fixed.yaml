@@ -1,0 +1,65 @@
+name: Update "Date Fixed" Field on Status Change
+
+on:
+  issues:
+    types:
+      - edited
+      - reopened
+      - opened
+
+jobs:
+  update_date_fixed:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      # Step 1: Check for Status Change to "Ready for QA"
+      - name: Check if Status Changed to "Ready for QA"
+        id: check_status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || "";
+
+            // Parse issue status from the issue body or labels
+            const statusReadyForQA = body.includes("Status: Ready for QA");
+
+            if (statusReadyForQA) {
+              console.log("Status changed to 'Ready for QA'");
+              core.setOutput("status_ready_for_qa", "true");
+            } else {
+              console.log("Status not changed to 'Ready for QA'.");
+              core.setOutput("status_ready_for_qa", "false");
+            }
+
+      # Step 2: Update "Date Fixed" Field with Today's Date
+      - name: Update "Date Fixed" Custom Field
+        if: steps.check_status.outputs.status_ready_for_qa == 'true'
+        uses: octokit/graphql-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          query: |
+            mutation UpdateProjectField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
+              updateProjectV2ItemFieldValue(
+                input: {projectId: $projectId, itemId: $itemId, fieldId: $fieldId, value: {text: $value}}
+              ) {
+                projectV2Item {
+                  id
+                }
+              }
+            }
+          variables: |
+            {
+              "projectId": "2",
+              "itemId": "${{ github.event.issue.node_id }}",
+              "fieldId": "YOUR_DATE_FIXED_FIELD_ID",
+              "value": "${{ steps.date.outputs.today_date }}"
+            }
+
+      # Step 3: Get Today's Date
+      - name: Set Today's Date
+        id: date
+        run: echo "today_date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
