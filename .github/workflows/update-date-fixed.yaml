@@ -60,6 +60,10 @@ jobs:
             }
 
       # Step 3: Get Today's Date
-      - name: Set Today's Date
+      - name: Set Today's Date (Windows)
         id: date
-        run: echo "today_date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        run: |
+          $today = Get-Date -Format yyyy-MM-dd
+          echo "today_date=$today" >> $env:GITHUB_ENV
+        shell: pwsh
+
