@@ -6,7 +6,12 @@ on:
       - edited
       - reopened
       - opened
-    runs-on: [self-hosted,windows,x64]
+jobs:
+  update_date_fixed:
+    runs-on: [self-hosted, windows, x64]
+    permissions:
+      issues: write
+      contents: read
     steps:
       id: auth
       env: 
