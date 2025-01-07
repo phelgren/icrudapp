@@ -21,17 +21,11 @@ jobs:
           script: |
             const issue = context.payload.issue;
             const body = issue.body || "";
-    
-      - name: Check status field
-        if: ${{ github.event.issue.labels.*.name contains('Ready for QA') }}
-        run: |
-            echo "The issue is Ready for QA!"
-            # Perform additional actions here
             
             // Parse issue status from the issue body or labels
             const statusReadyForQA = true
             
-              console.log("Label Added: ${{ github.event.label.name }}")
+            console.log("Label Added: ${{ github.event.label.name }}")
           
             if (statusReadyForQA) {
               console.log("Status is 'Ready for QA'");
