@@ -20,20 +20,17 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const issue = context.payload.issue;
-            const body = issue.body || "";
-            const labelname= github.event.label.name;
-            // Parse issue status from the issue body or labels
-          
-            const statusReadyForQA = label_name == "Label added: Ready for QA";
-            
-            if (statusReadyForQA) {
-              console.log("Status changed to 'Ready for QA'");
+           const label = context.payload.label;
+           const labelName = label ? label.name : null;
+
+            if (labelName === "Ready for QA") {
+              console.log("Label 'Ready for QA' detected.");
               core.setOutput("status_ready_for_qa", "true");
             } else {
-              console.log("Status not changed to 'Ready for QA'.");
+              console.log("Label 'Ready for QA' not detected.");
               core.setOutput("status_ready_for_qa", "false");
             }
+      
 
       # Step 2: Update "Date Fixed" Field with Today's Date
       - name: Update "Date Fixed" Custom Field
