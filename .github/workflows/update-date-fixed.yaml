@@ -12,9 +12,6 @@ jobs:
       issues: write
       contents: read
     steps:
-      - name: Log GitHub event payload
-        run: echo "${{ toJson(github.event) }}"
-
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
         id: check_status
