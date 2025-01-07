@@ -22,7 +22,9 @@ jobs:
           script: |
            const label = context.payload.label;
            const labelName = label ? label.name : null;
-           echo ${{ context.payload.status }}
+           const status = context.payload.status;
+
+           console.log(status);
            
             if (labelName === "Ready for QA") {
               console.log("Label 'Ready for QA' detected.");
