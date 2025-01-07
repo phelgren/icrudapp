@@ -24,7 +24,7 @@ jobs:
              console.log(body)
             
             // Parse issue status from the issue body or labels
-            const statusReadyForQA = contains( issue.body.labels.*.name, 'Ready for QA')
+            const statusReadyForQA = contains( issue.body.labels, 'Ready for QA')
 
             if (statusReadyForQA) {
               console.log("Status is 'Ready for QA'");
