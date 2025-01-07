@@ -21,8 +21,7 @@ jobs:
           script: |
             const issue = context.payload.issue;
             const body = issue.body || "";
-
-            echo ${{ body }}
+             console.log(body)
             
             // Parse issue status from the issue body or labels
             const statusReadyForQA = body.includes("Status: Ready for QA");
