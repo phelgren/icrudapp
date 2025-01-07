@@ -16,7 +16,7 @@ jobs:
       - name: Get the name
         run: |
           echo "Label added: ${{ github.event.label.name }}"
-          const thelabel = github.event.label.name
+          thelabel = ${github.event.label.name}
       
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
