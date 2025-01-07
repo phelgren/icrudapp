@@ -12,9 +12,13 @@ jobs:
       issues: write
       contents: read
     steps:
-          
+
+      - name: Get the name
+        run: echo github.event.label.name
+      
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
+
         id: check_status
         uses: actions/github-script@v6
         with:
@@ -24,8 +28,6 @@ jobs:
             
             // Parse issue status from the issue body or labels
             const statusReadyForQA = true
-            
-            console.log("Label Added: ${{ github.event.label.name }}")
           
             if (statusReadyForQA) {
               console.log("Status is 'Ready for QA'");
