@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Check for a status value
         run: |
-          echo ${{ github.event.status.state }}
+          echo ${{ context.payload.status }}
            
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
