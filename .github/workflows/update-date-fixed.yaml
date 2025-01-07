@@ -12,21 +12,17 @@ jobs:
       issues: write
       contents: read
     steps:
-
-      - name: Get the name
-        run: |
-          echo "LABEL_NAME=${{ github.event.label.name }}" >> $GITHUB_ENV 
       
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
-          echo " The label is $LABEL_NAME"
+
         id: check_status
         uses: actions/github-script@v6
         with:
           script: |
             const issue = context.payload.issue;
             const body = issue.body || "";
-            
+            "LABEL_NAME=${{ github.event.label.name }}" >> $GITHUB_ENV 
             // Parse issue status from the issue body or labels
           
             const statusReadyForQA = $LABEL_NAME == "Label added: Ready for QA";
