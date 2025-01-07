@@ -12,12 +12,15 @@ jobs:
       issues: write
       contents: read
     steps:
+      - name: Log GitHub event payload
+        run: echo "${{ toJson(github.event) }}"
+        
       - name: Parse status field
         run: |
           STATUS=$(jq -r '.issue.body | capture("Status: (?<status>.*)") | .status' <<< "${{ toJson(github.event) }}")
           echo "Status is: $STATUS"
   
-          if [[ "$STATUS" == "Ready for QA" ]]; then
+          if( "$STATUS" == "Ready for QA" ); then
             echo "Status is Ready for QA!"
           else
             echo "Status is not Ready for QA."
