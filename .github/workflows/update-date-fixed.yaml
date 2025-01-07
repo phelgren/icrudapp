@@ -25,17 +25,13 @@ jobs:
           script: |
             const issue = context.payload.issue;
             const body = issue.body || "";
-            
             // Parse issue status from the issue body or labels
-            const statusReadyForQA = true
-          
+            const statusReadyForQA = body.includes("Status: Ready for QA");
             if (statusReadyForQA) {
-              console.log("Status is 'Ready for QA'");
-
+              console.log("Status changed to 'Ready for QA'");
               core.setOutput("status_ready_for_qa", "true");
             } else {
-              console.log("Status is not 'Ready for QA'.");
-
+              console.log("Status not changed to 'Ready for QA'.");
               core.setOutput("status_ready_for_qa", "false");
             }
 
