@@ -15,14 +15,10 @@ jobs:
     
       - name: Log GitHub event payload
         run: | 
-        
-          labels= ${{ github.event.issue.labels }}
-
-          for label in ${{ labels }}; do
-
-            echo "Label: ${{ label.name }}"
-
-          done
+            
+            if [[  "$(jq '.[] | select(.name == "bug")' <<< ${GITHUB_EVENT_PATH})" != "null" ]]; then
+              echo "Running bug-specific actions..."
+            fi
           
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
