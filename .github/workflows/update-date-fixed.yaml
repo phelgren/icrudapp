@@ -16,7 +16,7 @@ jobs:
       - name: Get the name
         run: |
           echo "LABEL_NAME=${{ github.event.label.name }}" >> $GITHUB_ENV 
-          echo " The lable is $LABEL_NAME"
+          echo " The label is $LABEL_NAME"
       
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
@@ -30,7 +30,7 @@ jobs:
             
             // Parse issue status from the issue body or labels
             $thelabel = ${github.event.label.name}
-            const statusReadyForQA = ($LABLE_NAME == "Label added: Ready for QA");
+            const statusReadyForQA = ($LABEL_NAME == "Label added: Ready for QA");
             
             if (statusReadyForQA) {
               console.log("Status changed to 'Ready for QA'");
