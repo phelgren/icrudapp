@@ -3,9 +3,7 @@ name: Update "Date Fixed" Field on Status Change
 on:
   issues:
     types:
-      - edited
-      - reopened
-      - opened
+      - labeled
 
 jobs:
   update_date_fixed:
