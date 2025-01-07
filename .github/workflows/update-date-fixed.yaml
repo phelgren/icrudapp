@@ -12,13 +12,6 @@ jobs:
       issues: write
       contents: read
     steps:
-    
-      - name: Log GitHub event payload
-        run: | 
-            
-            if [[  "$(jq '.[] | select(.name == "bug")' <<< ${GITHUB_EVENT_PATH})" != "null" ]]; then
-              echo "Running bug-specific actions..."
-            fi
           
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
