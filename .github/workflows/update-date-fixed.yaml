@@ -15,7 +15,7 @@ jobs:
     
       - name: Log GitHub event payload
         run: | 
-          echo "Event type: ${{ (github.event_name ) }}"
+          echo "Event type: ${{ (github.event.issue.labels ) }}"
           
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
