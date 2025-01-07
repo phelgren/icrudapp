@@ -28,9 +28,11 @@ jobs:
 
             if (statusReadyForQA) {
               console.log("Status is 'Ready for QA'");
+              console.log(body)
               core.setOutput("status_ready_for_qa", "true");
             } else {
               console.log("Status is not 'Ready for QA'.");
+              console.log(body)
               core.setOutput("status_ready_for_qa", "false");
             }
 
