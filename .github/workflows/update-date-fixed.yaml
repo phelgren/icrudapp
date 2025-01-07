@@ -12,10 +12,7 @@ jobs:
       issues: write
       contents: read
     steps:
-      - name: Check for a status value
-        run: |
-          echo ${{ context.payload.status }}
-           
+    
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
 
@@ -25,7 +22,8 @@ jobs:
           script: |
            const label = context.payload.label;
            const labelName = label ? label.name : null;
-
+           echo ${{ context.payload.status }}
+           
             if (labelName === "Ready for QA") {
               console.log("Label 'Ready for QA' detected.");
               core.setOutput("status_ready_for_qa", "true");
