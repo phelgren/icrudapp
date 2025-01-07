@@ -12,8 +12,18 @@ jobs:
       issues: write
       contents: read
     steps:
-      # Step 1: Check for Status Change to "Ready for QA"
-      - name: Check if Status Changed to "Ready for QA"
+      - name: Parse status field
+        run: |
+          STATUS=$(jq -r '.issue.body | capture("Status: (?<status>.*)") | .status' <<< "${{ toJson(github.event) }}")
+          echo "Status is: $STATUS"
+  
+          if [[ "$STATUS" == "Ready for QA" ]]; then
+            echo "Status is Ready for QA!"
+          else
+            echo "Status is not Ready for QA."
+          fi
+      # Step 1: Check for Status is "Ready for QA"
+      - name: Check if Status is "Ready for QA"
         id: check_status
         uses: actions/github-script@v6
         with:
@@ -25,10 +35,10 @@ jobs:
             const statusReadyForQA = body.includes("Status: Ready for QA");
 
             if (statusReadyForQA) {
-              console.log("Status changed to 'Ready for QA'");
+              console.log("Status is 'Ready for QA'");
               core.setOutput("status_ready_for_qa", "true");
             } else {
-              console.log("Status not changed to 'Ready for QA'.");
+              console.log("Status is not 'Ready for QA'.");
               core.setOutput("status_ready_for_qa", "false");
             }
 
