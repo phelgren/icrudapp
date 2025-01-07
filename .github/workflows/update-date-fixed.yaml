@@ -29,8 +29,8 @@ jobs:
             const body = issue.body || "";
             
             // Parse issue status from the issue body or labels
-            $thelabel = ${github.event.label.name}
-            const statusReadyForQA = ($LABEL_NAME == "Label added: Ready for QA");
+          
+            const statusReadyForQA = $LABEL_NAME == "Label added: Ready for QA";
             
             if (statusReadyForQA) {
               console.log("Status changed to 'Ready for QA'");
