@@ -22,10 +22,10 @@ jobs:
           script: |
             const issue = context.payload.issue;
             const body = issue.body || "";
-            "LABEL_NAME=${{ github.event.label.name }}" >> $GITHUB_ENV 
+            const labelname= github.event.label.name;
             // Parse issue status from the issue body or labels
           
-            const statusReadyForQA = $LABEL_NAME == "Label added: Ready for QA";
+            const statusReadyForQA = label_name == "Label added: Ready for QA";
             
             if (statusReadyForQA) {
               console.log("Status changed to 'Ready for QA'");
