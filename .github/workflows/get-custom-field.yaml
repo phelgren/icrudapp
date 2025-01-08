@@ -16,10 +16,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Define GraphQL query
-        QUERY=$(cat <<EOF
-        query GetCustomField(\$projectId: ID!, \$itemId: ID!, \$fieldName: String!) {
-          node(id: \$itemId) {
+        # Define GraphQL query as a single-line string
+        QUERY='
+        query GetCustomField($projectId: ID!, $itemId: ID!, $fieldName: String!) {
+          node(id: $itemId) {
             ... on ProjectV2Item {
               id
               fieldValues(first: 100) {
@@ -40,8 +40,7 @@ jobs:
             }
           }
         }
-        EOF
-        )
+        '
 
         # Set variables (replace with actual IDs or dynamically fetch them)
         PROJECT_ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw"
@@ -54,12 +53,26 @@ jobs:
             '{query: $query, variables: {itemId: $itemId, fieldName: $fieldName}}}')" \
           https://api.github.com/graphql)
 
+        # Check for API response errors
+        if [ -z "$RESPONSE" ]; then
+          echo "Error: No response from API."
+          exit 1
+        fi
+
         # Extract the custom field value
         VALUE=$(echo "$RESPONSE" | jq -r --arg fieldName "$FIELD_NAME" \
           '.data.node.fieldValues.nodes[] | select(.field.name == $fieldName) | .text // .name')
 
+        if [ -z "$VALUE" ]; then
+          echo "Error: Custom field '$FIELD_NAME' not found or has no value."
+          exit 1
+        fi
+
         echo "Custom Field Value: $VALUE"
         echo "custom_field_value=$VALUE" >> $GITHUB_ENV
+
+    - name: Use the Custom Field Value
+      run: echo "The custom field value is ${{ env.custom_field_value }}"
 
     - name: Use the Custom Field Value
       run: echo "The custom field value is ${{ env.custom_field_value }}"
