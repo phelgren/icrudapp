@@ -19,8 +19,8 @@ jobs:
           echo "Issue Title: ${{ github.event.issue.title }}"
           echo "Custom Fields: ${{ github.event.issue.custom_fields }}"
           echo "Custom field value: ${{ github.event.issue.custom_fields[0].value }}"
-          echo "Custom field value: ${{ github.event.issue.labels.name }}"
-          echo "${{ toJson(github.event.issue.labels.name) }}"
+          echo "Custom field value: ${{ github.event.issue.labels[0].name }}"
+          echo "${{ toJson(github.event.issue.labels[0].name) }}"
           
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
