@@ -6,18 +6,16 @@ on:
 jobs:
   fetch-custom-field:
     runs-on: [self-hosted, windows, x64]
-    permissions:
-      issues: write
-      contents: read
 
     steps:
     - name: Query Custom Field from Project Item
       id: get-custom-field
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: pwsh
       run: |
-        # Define GraphQL query as a single-line string
-        QUERY='
+        # Define the GraphQL query
+        $query = @"
         query GetCustomField($projectId: ID!, $itemId: ID!, $fieldName: String!) {
           node(id: $itemId) {
             ... on ProjectV2Item {
@@ -40,39 +38,48 @@ jobs:
             }
           }
         }
-        '
+        "@
 
         # Set variables (replace with actual IDs or dynamically fetch them)
-        PROJECT_ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw"
-        FIELD_NAME="Status"
+        $projectItemId = "PVTI_lAHOAAFgjc4AuhQQzgVwqTw"
+        $fieldName = "Status"
 
-        # Call the GraphQL API
-        RESPONSE=$(curl -s -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
-          -H "Content-Type: application/json" \
-          -d "$(jq -n --arg query "$QUERY" --arg itemId "$PROJECT_ITEM_ID" --arg fieldName "$FIELD_NAME" \
-            '{query: $query, variables: {itemId: $itemId, fieldName: $fieldName}}}')" \
-          https://api.github.com/graphql)
+        # Prepare the payload
+        $payload = @{
+          query = $query
+          variables = @{
+            itemId = $projectItemId
+            fieldName = $fieldName
+          }
+        } | ConvertTo-Json -Depth 10
 
-        # Check for API response errors
-        if [ -z "$RESPONSE" ]; then
-          echo "Error: No response from API."
+        # Call the GitHub GraphQL API
+        $headers = @{
+          Authorization = "Bearer $env:GITHUB_TOKEN"
+          "Content-Type" = "application/json"
+        }
+        $response = Invoke-RestMethod -Uri "https://api.github.com/graphql" -Method POST -Headers $headers -Body $payload
+
+        # Check if the response is valid
+        if (-not $response) {
+          Write-Error "Error: No response from API."
           exit 1
-        fi
+        }
 
         # Extract the custom field value
-        VALUE=$(echo "$RESPONSE" | jq -r --arg fieldName "$FIELD_NAME" \
-          '.data.node.fieldValues.nodes[] | select(.field.name == $fieldName) | .text // .name')
+        $value = $response.data.node.fieldValues.nodes |
+          Where-Object { $_.field.name -eq $fieldName } |
+          ForEach-Object { $_.text -or $_.name }
 
-        if [ -z "$VALUE" ]; then
-          echo "Error: Custom field '$FIELD_NAME' not found or has no value."
+        if (-not $value) {
+          Write-Error "Error: Custom field '$fieldName' not found or has no value."
           exit 1
-        fi
+        }
 
-        echo "Custom Field Value: $VALUE"
-        echo "custom_field_value=$VALUE" >> $GITHUB_ENV
-
-    - name: Use the Custom Field Value
-      run: echo "The custom field value is ${{ env.custom_field_value }}"
+        Write-Output "Custom Field Value: $value"
+        Write-Output "custom_field_value=$value" >> $env:GITHUB_ENV
 
     - name: Use the Custom Field Value
-      run: echo "The custom field value is ${{ env.custom_field_value }}"
+      shell: pwsh
+      run: |
+        Write-Output "The custom field value is $env:custom_field_value"
