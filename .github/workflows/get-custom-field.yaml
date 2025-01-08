@@ -5,7 +5,10 @@ on:
 
 jobs:
   fetch-custom-field:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, windows, x64]
+    permissions:
+      issues: write
+      contents: read
 
     steps:
     - name: Query Custom Field from Project Item
