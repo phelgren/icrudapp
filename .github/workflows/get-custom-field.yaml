@@ -1,0 +1,62 @@
+name: Get Custom Field from Issue
+
+on:
+  workflow_dispatch: # Manually triggered workflow
+
+jobs:
+  fetch-custom-field:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Query Custom Field from Project Item
+      id: get-custom-field
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Define GraphQL query
+        QUERY=$(cat <<EOF
+        query GetCustomField(\$projectId: ID!, \$itemId: ID!, \$fieldName: String!) {
+          node(id: \$itemId) {
+            ... on ProjectV2Item {
+              id
+              fieldValues(first: 100) {
+                nodes {
+                  field {
+                    ... on ProjectV2Field {
+                      name
+                    }
+                  }
+                  ... on ProjectV2ItemFieldValueText {
+                    text
+                  }
+                  ... on ProjectV2ItemFieldValueSingleSelect {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+        EOF
+        )
+
+        # Set variables (replace with actual IDs or dynamically fetch them)
+        PROJECT_ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw"
+        FIELD_NAME="Status"
+
+        # Call the GraphQL API
+        RESPONSE=$(curl -s -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "$(jq -n --arg query "$QUERY" --arg itemId "$PROJECT_ITEM_ID" --arg fieldName "$FIELD_NAME" \
+            '{query: $query, variables: {itemId: $itemId, fieldName: $fieldName}}}')" \
+          https://api.github.com/graphql)
+
+        # Extract the custom field value
+        VALUE=$(echo "$RESPONSE" | jq -r --arg fieldName "$FIELD_NAME" \
+          '.data.node.fieldValues.nodes[] | select(.field.name == $fieldName) | .text // .name')
+
+        echo "Custom Field Value: $VALUE"
+        echo "custom_field_value=$VALUE" >> $GITHUB_ENV
+
+    - name: Use the Custom Field Value
+      run: echo "The custom field value is ${{ env.custom_field_value }}"
