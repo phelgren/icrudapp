@@ -11,8 +11,9 @@ jobs:
 
     - name: Get Status Field
       id: get_status
+      shell: pwsh
       run: |
-        STATUS=$(gh api graphql -f query='
+        $STATUS = gh api graphql -f query='
         query getIssueData {
           node(id: "PVT_kwHOAAFgjc4AuhQQ") {
             ... on ProjectV2 {
@@ -48,11 +49,11 @@ jobs:
               }
             }
           }
-        }' | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[] | select(.field.name == "Status") | .name')
-        echo "STATUS=$STATUS" >> $GITHUB_ENV
+        }' | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[] | select(.field.name == "Status") | .name'
+    
+        echo "STATUS=$STATUS" >> $env:GITHUB_ENV
     
     - name: Use the Status
       run: |
-        echo "The Status is: $STATUS"
-      env:
-        STATUS: ${{ env.STATUS }}
+        echo "The Status is: $env:STATUS"
+      shell: pwsh
