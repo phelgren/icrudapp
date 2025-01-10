@@ -9,8 +9,7 @@ jobs:
     permissions:
       contents: read
       issues: read
-
-      
+      repository-projects: read
     steps:
 
     - name: Get Status Field
@@ -56,5 +55,5 @@ jobs:
               }
             }
           }
-        }'  | tee graphql-output.json
+        }'  > graphql-output.json
     
