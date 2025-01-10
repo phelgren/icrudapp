@@ -49,7 +49,7 @@ jobs:
               }
             }
           }
-        }' | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[] | select(.field.name == "Status") | .name'
+        }'  | tee graphql-output.json
     
         echo "STATUS=$STATUS" >> $env:GITHUB_ENV
     
