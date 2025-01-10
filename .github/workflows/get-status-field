@@ -1,4 +1,13 @@
+name: Get Status Field from Issue
 
+on:
+  workflow_dispatch: # Manually triggered workflow
+
+jobs:
+  fetch-custom-field:
+    runs-on: [self-hosted, windows, x64]
+
+    steps:
 
 - name: Get Status Field
   id: get_status
