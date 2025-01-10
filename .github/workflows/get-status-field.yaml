@@ -9,11 +9,6 @@ jobs:
 
     steps:
 
-    - name: Install GitHub CLI
-      shell: pwsh
-      run: |
-        choco install gh -y
-        gh --version
     - name: Get Status Field
       id: get_status
       shell: pwsh
