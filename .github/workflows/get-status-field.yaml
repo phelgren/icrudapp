@@ -13,7 +13,7 @@ jobs:
       id: get_status
       shell: pwsh
       run: |
-        $STATUS = gh api graphql -f query='
+        gh api graphql -f query='
         query getIssueData {
           node(id: "PVT_kwHOAAFgjc4AuhQQ") {
             ... on ProjectV2 {
