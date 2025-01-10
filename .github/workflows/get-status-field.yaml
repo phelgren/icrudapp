@@ -51,9 +51,3 @@ jobs:
           }
         }'  | tee graphql-output.json
     
-        echo "STATUS=$STATUS" >> $env:GITHUB_ENV
-    
-    - name: Use the Status
-      run: |
-        echo "The Status is: $env:STATUS"
-      shell: pwsh
