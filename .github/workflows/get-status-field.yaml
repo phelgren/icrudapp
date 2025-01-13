@@ -13,45 +13,45 @@ jobs:
       id: get_status
       shell: pwsh
       run: |
-        $STATUS = gh api graphql -f query='
-        query getIssueData {
-          node(id: "PVT_kwHOAAFgjc4AuhQQ") {
-            ... on ProjectV2 {
-              items(last: 20) {
-                nodes {
+    $STATUS = gh api graphql -f query='
+    query getIssueData {
+      node(id: "PVT_kwHOAAFgjc4AuhQQ") {
+        ... on ProjectV2 {
+          items(last: 20) {
+            nodes {
+              id
+              content {
+                ... on Issue {
+                  title
+                  state
                   id
-                  content {
-                    ... on Issue {
-                      title
-                      state
-                      id
-                      assignees(first: 10) {
-                        nodes {
-                          login
-                        }
-                      }
+                  assignees(first: 10) {
+                    nodes {
+                      login
                     }
                   }
-                  fieldValues(first: 20) {
-                    nodes {
-                      ... on ProjectV2ItemFieldSingleSelectValue {
-                        field {
-                          ... on ProjectV2SingleSelectField {
-                            name
-                          }
-                        }
+                }
+              }
+              fieldValues(first: 20) {
+                nodes {
+                  ... on ProjectV2ItemFieldSingleSelectValue {
+                    field {
+                      ... on ProjectV2SingleSelectField {
                         name
-                        id
                       }
                     }
+                    name
+                    id
                   }
                 }
               }
             }
           }
-        }' jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]'
-    
-        echo "STATUS=$STATUS" >> $env:GITHUB_ENV
+        }
+      }
+    }' | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name'
+
+    echo "STATUS=$STATUS" >> $env:GITHUB_ENV
     
     - name: Use the Status
       run: |
