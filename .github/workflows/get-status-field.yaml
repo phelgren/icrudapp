@@ -57,6 +57,6 @@ jobs:
               }
             }
           }
-        }' | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name'
+        }' | jq -r '.data.node.items.nodes[]? | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name'
     
         echo "STATUS=$STATUS" >> $env:GITHUB_ENV
