@@ -1,59 +1,41 @@
-name: Get Status Field from Issue
-
-on:
-  workflow_dispatch: # Manually triggered workflow
-
-jobs:
-  fetch-custom-field:
-    runs-on: [self-hosted, windows, x64]
-    permissions:
-      contents: read
-      issues: read
-      repository-projects: read
-    steps:
-
-    - name: Get Status Field
-      id: get_status
-      shell: pwsh
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh api graphql -f query='
-        query getIssueData {
-          node(id: "PVT_kwHOAAFgjc4AuhQQ") {
-            ... on ProjectV2 {
-              items(last: 20) {
-                nodes {
+- name: Test jq Query
+  shell: pwsh
+  run: |
+    OUTPUT=$(gh api graphql -f query='
+    query getIssueData {
+      node(id: "PVT_kwHOAAFgjc4AuhQQ") {
+        ... on ProjectV2 {
+          items(last: 20) {
+            nodes {
+              id
+              content {
+                ... on Issue {
+                  title
+                  state
                   id
-                  content {
-                    ... on Issue {
-                      title
-                      state
-                      id
-                      assignees(first: 10) {
-                        nodes {
-                          login
-                        }
-                      }
+                  assignees(first: 10) {
+                    nodes {
+                      login
                     }
                   }
-                  fieldValues(first: 20) {
-                    nodes {
-                      ... on ProjectV2ItemFieldSingleSelectValue {
-                        field {
-                          ... on ProjectV2SingleSelectField {
-                            name
-                          }
-                        }
+                }
+              }
+              fieldValues(first: 20) {
+                nodes {
+                  ... on ProjectV2ItemFieldSingleSelectValue {
+                    field {
+                      ... on ProjectV2SingleSelectField {
                         name
-                        id
                       }
                     }
+                    name
+                    id
                   }
                 }
               }
             }
           }
-        }'  > graphql-output.json
-    
+        }
+      }
+    }')
+    echo "$OUTPUT" | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[] | select(.field.name == "Status") | .name'
