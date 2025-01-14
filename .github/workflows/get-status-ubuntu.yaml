@@ -63,6 +63,7 @@ jobs:
 
     - name: Echo Status Field
       shell: bash
-      run: echo "The Status field value is: $STATUS"
+      run: |
+        echo "The Status field value is: $STATUS"
       env:
         STATUS: ${{ steps.get_status.outputs.STATUS }}
