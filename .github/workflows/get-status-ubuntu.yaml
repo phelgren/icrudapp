@@ -60,3 +60,10 @@ jobs:
         }' | jq -r '.data.node.items.nodes[]? | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name')
     
         echo "STATUS=$STATUS" >> $GITHUB_ENV
+        
+    - name: Echo Status Field
+      shell: bash
+      run: |
+        echo "The Status field value is: $STATUS"
+      env:
+        STATUS: ${{ steps.get_status.outputs.STATUS }}
