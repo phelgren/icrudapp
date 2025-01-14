@@ -1,0 +1,62 @@
+name: Get Status Field from Issue
+
+on:
+  workflow_dispatch: # Manually triggered workflow
+
+jobs:
+  fetch-custom-field:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up GH_TOKEN
+      shell: bash
+      run: |
+        echo "GH_TOKEN=$GH_TOKEN" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    
+    - name: Get Status Field
+      id: get_status
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        STATUS=$(gh api graphql -f query='
+        query getIssueData {
+          node(id: "PVT_kwHOAAFgjc4AuhQQ") {
+            ... on ProjectV2 {
+              items(last: 20) {
+                nodes {
+                  id
+                  content {
+                    ... on Issue {
+                      title
+                      state
+                      id
+                      assignees(first: 10) {
+                        nodes {
+                          login
+                        }
+                      }
+                    }
+                  }
+                  fieldValues(first: 20) {
+                    nodes {
+                      ... on ProjectV2ItemFieldSingleSelectValue {
+                        field {
+                          ... on ProjectV2SingleSelectField {
+                            name
+                          }
+                        }
+                        name
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }' | jq -r '.data.node.items.nodes[]? | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name')
+    
+        echo "STATUS=$STATUS" >> $GITHUB_ENV
