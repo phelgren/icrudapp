@@ -65,10 +65,9 @@ jobs:
       id: get_status
       shell: bash
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
         RAW_OUTPUT: ${{ steps.get_raw_output.outputs.RAW_OUTPUT }}
       run: |
-        STATUS=$(echo "$RAW_OUTPUT" | jq -r '.data.node.items.nodes[]? | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name')
+        STATUS=$(echo "$RAW_OUTPUT" | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[] | select(.field.name == "Status") | .name')
         echo "STATUS=$STATUS" >> $GITHUB_ENV
 
     - name: Echo Status Field
