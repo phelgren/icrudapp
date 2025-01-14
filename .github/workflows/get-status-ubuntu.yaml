@@ -58,8 +58,8 @@ jobs:
             }
           }
         }')
-        echo "RAW_OUTPUT=$RAW_OUTPUT" >> $GITHUB_ENV
         echo "$RAW_OUTPUT"
+        echo "RAW_OUTPUT=$RAW_OUTPUT" >> $GITHUB_ENV
 
     - name: Get Status Field
       id: get_status
@@ -68,7 +68,8 @@ jobs:
         RAW_OUTPUT: ${{ steps.get_raw_output.outputs.RAW_OUTPUT }}
       run: |
         STATUS=$(echo "$RAW_OUTPUT" | jq -r '.data.node.items.nodes[] | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[] | select(.field.name == "Status") | .name')
-        echo "STATUS=$STATUS" >> $GITHUB_ENV
+        echo "STATUS=$STATUS"
+        echo "::set-output name=STATUS::$STATUS"
 
     - name: Echo Status Field
       shell: bash
