@@ -19,7 +19,7 @@ jobs:
       id: get_status
       shell: bash
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         STATUS=$(gh api graphql -f query='
         query getIssueData {
