@@ -15,13 +15,13 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
     
-    - name: Get Status Field
-      id: get_status
+    - name: Get Raw JSON Output
+      id: get_raw_output
       shell: bash
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        STATUS=$(gh api graphql -f query='
+        RAW_OUTPUT=$(gh api graphql -f query='
         query getIssueData {
           node(id: "PVT_kwHOAAFgjc4AuhQQ") {
             ... on ProjectV2 {
@@ -57,10 +57,20 @@ jobs:
               }
             }
           }
-        }' | jq -r '.data.node.items.nodes[]? | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name')
-    
+        }')
+        echo "RAW_OUTPUT=$RAW_OUTPUT" >> $GITHUB_ENV
+        echo "$RAW_OUTPUT"
+
+    - name: Get Status Field
+      id: get_status
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        RAW_OUTPUT: ${{ steps.get_raw_output.outputs.RAW_OUTPUT }}
+      run: |
+        STATUS=$(echo "$RAW_OUTPUT" | jq -r '.data.node.items.nodes[]? | select(.content.id == "I_kwDOKdDuds6jrP5m") | .fieldValues.nodes[]? | select(.field?.name == "Status") | .name')
         echo "STATUS=$STATUS" >> $GITHUB_ENV
-        
+
     - name: Echo Status Field
       shell: bash
       run: |
