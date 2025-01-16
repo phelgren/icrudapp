@@ -22,7 +22,7 @@ jobs:
         DATE_VALUE="2025-01-15"  # Change the date value to the desired date in YYYY-MM-DD format
         PROJECT_ID="PVT_kwHOAAFgjc4AuhQQ"
         FIELD_ID="PVTF_lAHOAAFgjc4AuhQQzglGg2Y"
-        ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw" # Replace with the actual item ID
+        ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqT4" # Replace with the actual item ID
 
         gh api graphql -f query='
         mutation updateDateField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: Date!) {
