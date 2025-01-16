@@ -1,0 +1,41 @@
+name: Update Fixed Date Field
+
+on:
+  workflow_dispatch: # Manually triggered workflow
+
+jobs:
+  update-date-field:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up GH_TOKEN
+      shell: bash
+      run: echo "GH_TOKEN=$GH_TOKEN" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    
+    - name: Update Fixed Date Field
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        DATE_VALUE="2025-01-15"  # Change the date value to the desired date in YYYY-MM-DD format
+        PROJECT_ID="PVT_kwHOAAFgjc4AuhQQ"
+        FIELD_ID="PVTF_lAHOAAFgjc4AuhQQzglGg2Y"
+        ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw" # Replace with the actual item ID
+
+        gh api graphql -f query='
+        mutation updateDateField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: Date!) {
+          updateProjectV2ItemFieldValue(
+            input: {
+              projectId: $projectId
+              itemId: $itemId
+              fieldId: $fieldId
+              value: { date: $value }
+            }
+          ) {
+            projectV2Item {
+              id
+            }
+          }
+        }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$FIELD_ID" -f value="$DATE_VALUE"
