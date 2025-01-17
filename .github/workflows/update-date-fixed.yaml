@@ -2,7 +2,9 @@ name: Update Fixed Date Field
 
 on:
   issues:
-    types: [labeled]
+    types: 
+      - labeled
+      - edited
 
 jobs:
   update-date-field:
