@@ -13,14 +13,16 @@ jobs:
       contents: read
     steps:
       - name: Print all issue details including custom fields
-
         run: |
-
           echo "Issue Title: ${{ github.event.issue.title }}"
-          echo "field_value = ${{ github.event.issue.labels[0].name }}" >> "$GITHUB_OUTPUT"
           echo "Custom field value: ${{ github.event.issue.labels[0].name }}"
-          echo "$field_value"
-          echo "${{ toJson(github.event.issue.labels[0].name) }}"
+
+      - name: Save custom field value
+        id: save_field
+        run: echo "::set-output name=custom_field::${{ github.event.issue.labels[0].name }}"
+
+      - name: Use custom field value
+        run: echo "Custom field value: ${{ steps.save_field.outputs.custom_field }}"
           
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
