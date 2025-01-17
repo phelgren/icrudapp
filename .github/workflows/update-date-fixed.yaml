@@ -1,82 +1,57 @@
-name: Update "Date Fixed" Field on Status Change
+name: Update Fixed Date Field
 
 on:
   issues:
-    types:
-      - labeled
+    types: [labeled]
 
 jobs:
-  update_date_fixed:
-    runs-on: [self-hosted, windows, x64]
-    permissions:
-      issues: write
-      contents: read
+  update-date-field:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Print all issue details including custom fields
-        run: |
-          echo "Issue Title: ${{ github.event.issue.title }}"
-          echo "Custom field value: ${{ github.event.issue.labels[0].name }}"
+    - name: Set up GH_TOKEN
+      shell: bash
+      run: echo "GH_TOKEN=$GH_TOKEN" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    
+    - name: Check label and save custom field value
+      id: check_label
+      run: echo "::set-output name=custom_field::${{ github.event.issue.labels[0].name }}"
+    
+    - name: Set current date
+      id: set_date
+      run: echo "::set-output name=current_date::$(date +'%Y-%m-%d')"
 
-      - name: Save custom field value
-        id: save_field
-        run: echo "::set-output name=custom_field::${{ github.event.issue.labels[0].name }}"
-
-      - name: Use custom field value
-        run: |
-          echo "Custom field value: ${{ steps.save_field.outputs.custom_field }}"
+    - name: Update Fixed Date Field
+      if: steps.check_label.outputs.custom_field == 'Ready for QA'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        PROJECT_ID="PVT_kwHOAAFgjc4AuhQQ"
+        FIELD_ID="PVTF_lAHOAAFgjc4AuhQQzglGg2Y"
+        ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw" # Replace with the actual item ID
+        DATE_VALUE="${{ steps.set_date.outputs.current_date }}"
         
-      # Step 1: Check for Status is "Ready for QA"
-      - name: Check if Status is "Ready for QA"
-
-        id: check_status
-        uses: actions/github-script@v6
-        with:
-          script: |
-           const label = context.payload.label;
-           const labelName = label ? label.name : null;
-           const status = context.payload.status;
-
-           console.log(status);
-           
-            if (labelName === "Ready for QA") {
-              console.log("Label 'Ready for QA' detected.");
-              core.setOutput("status_ready_for_qa", "true");
-            } else {
-              console.log("Label 'Ready for QA' not detected.");
-              core.setOutput("status_ready_for_qa", "false");
+        gh api graphql -f query='
+        mutation updateDateField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: Date!) {
+          updateProjectV2ItemFieldValue(
+            input: {
+              projectId: $projectId
+              itemId: $itemId
+              fieldId: $fieldId
+              value: { date: $value }
             }
-      
-
-      # Step 2: Update "Date Fixed" Field with Today's Date
-      - name: Update "Date Fixed" Custom Field
-      #  if: steps.check_status.outputs.status_ready_for_qa == 'true'
-        uses: actions/github-script@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          query: |
-            mutation UpdateProjectField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
-              updateProjectV2ItemFieldValue(
-                input: {projectId: $projectId, itemId: $itemId, fieldId: $fieldId, value: {text: $value}}
-              ) {
-                projectV2Item {
-                  id
-                }
-              }
+          ) {
+            projectV2Item {
+              id
             }
-          variables: |
-            {
-              "projectId": "PVT_kwHOAAFgjc4AuhQQ",
-              "itemId": "${{ github.event.issue.node_id }}",
-              "fieldId": "PVTF_lAHOAAFgjc4AuhQQzglGg2Y",
-              "value": "${{ steps.date.outputs.today_date }}"
-            }
+          }
+        }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$FIELD_ID" -f value="$DATE_VALUE"
 
-      # Step 3: Get Today's Date
-      - name: Set Today's Date (Windows)
-        id: date
-        run: |
-          $today = Get-Date -Format yyyy-MM-dd
-          echo "today_date=$today" >> $env:GITHUB_ENV
-        shell: pwsh
-
+    - name: Echo Status Field
+      if: steps.check_label.outputs.custom_field == 'Ready for QA'
+      shell: bash
+      run: |
+        echo "The Status field value is: ${{ steps.check_label.outputs.custom_field }}"
