@@ -19,7 +19,7 @@ jobs:
           echo "Issue Title: ${{ github.event.issue.title }}"
           field_value = ${{ github.event.issue.labels[0].name }}"
           echo "Custom field value: ${{ github.event.issue.labels[0].name }}"
-          echo $(field_value)
+          echo ${{field_value}}
           echo "${{ toJson(github.event.issue.labels[0].name) }}"
           
       # Step 1: Check for Status is "Ready for QA"
