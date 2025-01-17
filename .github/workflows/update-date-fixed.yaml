@@ -22,8 +22,9 @@ jobs:
         run: echo "::set-output name=custom_field::${{ github.event.issue.labels[0].name }}"
 
       - name: Use custom field value
-        run: echo "Custom field value: ${{ steps.save_field.outputs.custom_field }}"
-          
+        run: |
+          echo "Custom field value: ${{ steps.save_field.outputs.custom_field }}"
+        
       # Step 1: Check for Status is "Ready for QA"
       - name: Check if Status is "Ready for QA"
 
