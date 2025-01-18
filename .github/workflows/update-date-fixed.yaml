@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up environment variables
-      run: |
-        echo "GH_TOKEN=${{ secrets.GH_TOKEN }}" >> $GITHUB_ENV
-        echo "PROJECT_ID=${{ secrets.GH_PROJECT_ID }}" >> $GITHUB_ENV
-        echo "FIELD_ID=${{ secrets.GH_FIXED_DATED_FIELD }}" >> $GITHUB_ENV
+    - name: Set up GH_TOKEN
+      shell: bash
+      run: echo "GH_TOKEN=$GH_TOKEN" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
     
     - name: Check label and save custom field value
       id: check_label
@@ -32,9 +32,9 @@ jobs:
       shell: bash
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        PROJECT_ID: ${{ secrets.PROJECT_ID }}
-        FIELD_ID: ${{ secrets.FIELD_ID }}
       run: |
+        PROJECT_ID="PVT_kwHOAAFgjc4AuhQQ"
+        FIELD_ID="PVTF_lAHOAAFgjc4AuhQQzglGg2Y"
         ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw" # Replace with the actual item ID
         DATE_VALUE="${{ steps.set_date.outputs.current_date }}"
         
