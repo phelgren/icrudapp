@@ -17,7 +17,7 @@ jobs:
       run: |
         echo "GH_TOKEN=${{ secrets.GH_TOKEN }}" >> $GITHUB_ENV
         echo "PROJECT_ID=${{ secrets.GH_PROJECT_ID }}" >> $GITHUB_ENV
-        echo "FIELD_ID=${{ secrets.GH_STATUS_FIELD_ID }}" >> $GITHUB_ENV
+        echo "FIELD_ID=${{ secrets.GH_FIXED_DATED_FIELD }}" >> $GITHUB_ENV
     
     - name: Check label and save custom field value
       id: check_label
