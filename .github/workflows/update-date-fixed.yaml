@@ -57,4 +57,5 @@ jobs:
     - name: Echo Status Field
       if: steps.check_label.outputs.custom_field == 'Ready for QA'
       shell: bash
-      run: echo "The Status field value is: ${{ steps.check_label.outputs.custom_field }}"
+      run: |
+        echo "The Status field value is: ${{ steps.check_label.outputs.custom_field }}"
