@@ -31,8 +31,8 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        PROJECT_ID= ${{secrets.GH_PROJECT_ID }}
-        FIELD_ID= ${{ secrets.GH_STATUS_FIELD_ID }}
+        PROJECT_ID= "${{secrets.GH_PROJECT_ID }}"
+        FIELD_ID= "${{ secrets.GH_STATUS_FIELD_ID }}"
         ITEM_ID="PVTI_lAHOAAFgjc4AuhQQzgVwqTw" # Replace with the actual item ID
         DATE_VALUE="${{ steps.set_date.outputs.current_date }}"
         
